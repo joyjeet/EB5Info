@@ -67,4 +67,3 @@ Recommended header row for the worksheet:
 - The contact endpoint now requires at least one configured delivery destination: SMTP email, Google Sheets, or both.
 - If both delivery destinations are configured, the API will attempt both and treat the submission as successful if at least one destination succeeds.
 - This website is informational and should still be reviewed by qualified immigration counsel before production launch.
-- Test the contact form and submission handling thoroughly before going live, especially if using the Google Sheets integration, to ensure data is being recorded as expected.

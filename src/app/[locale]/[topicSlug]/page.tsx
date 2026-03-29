@@ -3,57 +3,66 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { costPageContent } from "@/lib/cost-page-content";
-import { isLocale, withBaseUrl } from "@/lib/i18n";
+import { intentPageContent } from "@/lib/intent-page-content";
+import { isLocale, locales, withBaseUrl } from "@/lib/i18n";
 import { buildOrganizationSchema, buildWebPageSchema } from "@/lib/schema";
-import { statusArticleContent, statusArticleSlug } from "@/lib/status-article-content";
+import { isTopicArticleSlug, topicArticleContent, topicArticleSlugs } from "@/lib/topic-article-content";
 
 type PageProps = {
-  params: Promise<{ locale: string }>;
+  params: Promise<{ locale: string; topicSlug: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale } = await params;
+export async function generateStaticParams() {
+  return locales.flatMap((locale) => topicArticleSlugs.map((topicSlug) => ({ locale, topicSlug })));
+}
 
-  if (!isLocale(locale)) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, topicSlug } = await params;
+
+  if (!isLocale(locale) || !isTopicArticleSlug(topicSlug)) {
     notFound();
   }
 
-  const page = statusArticleContent[locale];
+  const page = topicArticleContent[locale][topicSlug];
 
   return {
     title: page.seo.title,
     description: page.seo.description,
     keywords: page.seo.keywords,
     alternates: {
-      canonical: `/${locale}/${statusArticleSlug}`,
+      canonical: `/${locale}/${topicSlug}`,
     },
     openGraph: {
       title: page.seo.title,
       description: page.seo.description,
-      url: withBaseUrl(`/${locale}/${statusArticleSlug}`),
+      url: withBaseUrl(`/${locale}/${topicSlug}`),
       type: "article",
     },
   };
 }
 
-export default async function ExistingStatusArticlePage({ params }: PageProps) {
-  const { locale } = await params;
+export default async function TopicArticlePage({ params }: PageProps) {
+  const { locale, topicSlug } = await params;
 
-  if (!isLocale(locale)) {
+  if (!isLocale(locale) || !isTopicArticleSlug(topicSlug)) {
     notFound();
   }
 
-  const page = statusArticleContent[locale];
+  const page = topicArticleContent[locale][topicSlug];
   const costPage = costPageContent[locale];
+  const investmentPage = intentPageContent[locale].investmentAmount;
+  const relatedTopicArticles = topicArticleSlugs
+    .filter((slug) => slug !== topicSlug)
+    .map((slug) => topicArticleContent[locale][slug]);
   const organizationStructuredData = buildOrganizationSchema();
-  const webPageStructuredData = buildWebPageSchema(`/${locale}/${statusArticleSlug}`, page.seo.title, page.seo.description);
+  const webPageStructuredData = buildWebPageSchema(`/${locale}/${topicSlug}`, page.seo.title, page.seo.description);
   const articleStructuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: page.title,
     description: page.seo.description,
     inLanguage: locale,
-    mainEntityOfPage: withBaseUrl(`/${locale}/${statusArticleSlug}`),
+    mainEntityOfPage: withBaseUrl(`/${locale}/${topicSlug}`),
     publisher: {
       "@type": "Organization",
       name: "EB5 Info",
@@ -74,7 +83,7 @@ export default async function ExistingStatusArticlePage({ params }: PageProps) {
         "@type": "ListItem",
         position: 2,
         name: page.title,
-        item: withBaseUrl(`/${locale}/${statusArticleSlug}`),
+        item: withBaseUrl(`/${locale}/${topicSlug}`),
       },
     ],
   };
@@ -165,13 +174,31 @@ export default async function ExistingStatusArticlePage({ params }: PageProps) {
       </section>
 
       <section className="content-section">
+        <div className="section-heading">
+          <h2>{page.relatedTitle}</h2>
+          <p>{page.relatedIntro}</p>
+        </div>
+        <div className="related-grid related-grid-wide">
+          {relatedTopicArticles.map((article) => (
+            <Link className="related-card" href={`/${locale}/${article.slug}`} key={article.slug}>
+              <h3>{article.title}</h3>
+              <p>{article.intro}</p>
+            </Link>
+          ))}
+          <Link className="related-card" href={`/${locale}/eb-5-cost-in-usa`}>
+            <h3>{costPage.title}</h3>
+            <p>{costPage.intro}</p>
+          </Link>
+          <Link className="related-card" href={`/${locale}/eb-5-investment-amount`}>
+            <h3>{investmentPage.title}</h3>
+            <p>{investmentPage.intro}</p>
+          </Link>
+        </div>
+      </section>
+
+      <section className="content-section">
         <div className="section-heading narrow-heading">
           <p>{page.disclaimer}</p>
-        </div>
-        <div className="section-actions">
-          <Link className="secondary-button" href={`/${locale}/eb-5-cost-in-usa`}>
-            {costPage.title}
-          </Link>
         </div>
       </section>
     </main>

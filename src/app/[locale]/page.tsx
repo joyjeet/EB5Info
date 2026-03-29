@@ -8,6 +8,7 @@ import { isLocale, localeLabels, locales, withBaseUrl } from "@/lib/i18n";
 import { intentPageContent } from "@/lib/intent-page-content";
 import { buildOrganizationSchema, buildWebPageSchema } from "@/lib/schema";
 import { siteContent } from "@/lib/site-content";
+import { topicArticleContent, topicArticleSlugs } from "@/lib/topic-article-content";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -24,6 +25,7 @@ export default async function LocalePage({ params }: PageProps) {
   const glossary = glossaryContent[locale];
   const costPage = costPageContent[locale];
   const intentPages = intentPageContent[locale];
+  const topicArticles = topicArticleSlugs.map((slug) => topicArticleContent[locale][slug]);
   const organizationStructuredData = buildOrganizationSchema();
   const webPageStructuredData = buildWebPageSchema(`/${locale}`, copy.seo.title, copy.seo.description);
   const costItemListStructuredData = {
@@ -293,6 +295,27 @@ export default async function LocalePage({ params }: PageProps) {
             <Link className="related-card" key={guide.href} href={guide.href}>
               <h3>{guide.title}</h3>
               <p>{guide.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="content-section">
+        <div className="section-heading">
+          <p className="section-kicker">Articles</p>
+          <h2>{copy.articleIndex.title}</h2>
+          <p>{copy.articleIndex.intro}</p>
+        </div>
+        <div className="section-actions">
+          <Link className="secondary-button" href={`/${locale}/articles`}>
+            {copy.articleIndex.browseAll}
+          </Link>
+        </div>
+        <div className="related-grid related-grid-wide">
+          {topicArticles.map((article) => (
+            <Link className="related-card" key={article.slug} href={`/${locale}/${article.slug}`}>
+              <h3>{article.title}</h3>
+              <p>{article.intro}</p>
             </Link>
           ))}
         </div>

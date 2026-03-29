@@ -75,6 +75,11 @@ export type SiteCopy = {
     title: string;
     items: QuestionTopic[];
   };
+  articleIndex: {
+    title: string;
+    intro: string;
+    browseAll: string;
+  };
   contact: {
     title: string;
     intro: string;
@@ -325,12 +330,19 @@ export const siteContent: Record<Locale, SiteCopy> = {
         {
           title: "Source of funds",
           description: "What records are often gathered to explain lawful source and transfer path.",
+          href: "/source-of-funds-eb-5-guide",
         },
         {
           title: "Project due diligence",
           description: "Questions investors often raise when reviewing a regional center or project structure.",
+          href: "/eb-5-project-due-diligence-guide",
         },
       ],
+    },
+    articleIndex: {
+      title: "EB-5 articles and planning guides",
+      intro: "Browse deeper article-style explainers covering status planning, source of funds, project diligence, processing delays, and other practical EB-5 questions.",
+      browseAll: "Browse all articles",
     },
     contact: {
       title: "Ask a question or request a follow-up",
@@ -619,12 +631,19 @@ export const siteContent: Record<Locale, SiteCopy> = {
         {
           title: "Origen de fondos",
           description: "Que documentos suelen reunirse para explicar el origen licito y la ruta de transferencia.",
+          href: "/source-of-funds-eb-5-guide",
         },
         {
           title: "Diligencia del proyecto",
           description: "Preguntas comunes al revisar un centro regional o la estructura del proyecto.",
+          href: "/eb-5-project-due-diligence-guide",
         },
       ],
+    },
+    articleIndex: {
+      title: "Articulos y guias de planificacion EB-5",
+      intro: "Explore articulos explicativos sobre planificacion de estatus, origen de fondos, diligencia del proyecto, demoras de proceso y otras preguntas practicas sobre EB-5.",
+      browseAll: "Ver todos los articulos",
     },
     contact: {
       title: "Haga una pregunta o solicite seguimiento",
@@ -904,12 +923,19 @@ export const siteContent: Record<Locale, SiteCopy> = {
         {
           title: "资金来源",
           description: "通常需要哪些材料来说明资金合法来源及转账路径。",
+          href: "/source-of-funds-eb-5-guide",
         },
         {
           title: "项目尽调",
           description: "投资人在评估区域中心或项目结构时常问的问题。",
+          href: "/eb-5-project-due-diligence-guide",
         },
       ],
+    },
+    articleIndex: {
+      title: "EB-5 文章与规划指南",
+      intro: "集中查看关于身份规划、资金来源、项目尽调、流程延误等 EB-5 实务问题的深度文章。",
+      browseAll: "查看全部文章",
     },
     contact: {
       title: "提交问题或留下联系方式",
