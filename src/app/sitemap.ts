@@ -34,5 +34,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
+    ...locales.map((locale) => ({
+      url: withBaseUrl(`/${locale}/existing-nonimmigrant-status-eb-5-options`),
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.75,
+    })),
   ];
 }

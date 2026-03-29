@@ -332,8 +332,17 @@ export default async function LocalePage({ params }: PageProps) {
             <ul>
               {copy.topics.items.map((topic) => (
                 <li key={topic.title}>
-                  <strong>{topic.title}</strong>
-                  <span>{topic.description}</span>
+                  {topic.href ? (
+                    <Link className="topic-link" href={`/${locale}${topic.href}`}>
+                      <strong>{topic.title}</strong>
+                      <span>{topic.description}</span>
+                    </Link>
+                  ) : (
+                    <>
+                      <strong>{topic.title}</strong>
+                      <span>{topic.description}</span>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>

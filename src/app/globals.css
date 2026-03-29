@@ -526,6 +526,14 @@ textarea {
   margin-bottom: 0.35rem;
 }
 
+.topic-link {
+  display: block;
+}
+
+.topic-link:hover strong {
+  color: var(--accent);
+}
+
 .contact-form {
   display: grid;
   gap: 1rem;

@@ -3,6 +3,7 @@ import type { Locale } from "@/lib/i18n";
 export type QuestionTopic = {
   title: string;
   description: string;
+  href?: string;
 };
 
 export type Stat = {
@@ -319,6 +320,7 @@ export const siteContent: Record<Locale, SiteCopy> = {
         {
           title: "Current U.S. visa status",
           description: "How existing nonimmigrant status can affect the options available to you.",
+          href: "/existing-nonimmigrant-status-eb-5-options",
         },
         {
           title: "Source of funds",
@@ -612,6 +614,7 @@ export const siteContent: Record<Locale, SiteCopy> = {
         {
           title: "Estatus actual en EE. UU.",
           description: "Como su visa o estatus actual puede afectar las opciones disponibles.",
+          href: "/existing-nonimmigrant-status-eb-5-options",
         },
         {
           title: "Origen de fondos",
@@ -896,6 +899,7 @@ export const siteContent: Record<Locale, SiteCopy> = {
         {
           title: "当前美国身份",
           description: "了解现有签证或身份如何影响您可选择的路径。",
+          href: "/existing-nonimmigrant-status-eb-5-options",
         },
         {
           title: "资金来源",
