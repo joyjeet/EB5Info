@@ -2,9 +2,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ContactForm } from "@/components/contact-form";
+import { SiteHeader } from "@/components/site-header";
 import { costPageContent } from "@/lib/cost-page-content";
 import { glossaryContent } from "@/lib/glossary-content";
-import { isLocale, localeLabels, locales, withBaseUrl } from "@/lib/i18n";
+import type { HeaderNavItem } from "@/lib/header-copy";
+import { isLocale, locales, withBaseUrl } from "@/lib/i18n";
 import { intentPageContent } from "@/lib/intent-page-content";
 import { buildOrganizationSchema, buildWebPageSchema } from "@/lib/schema";
 import { siteContent } from "@/lib/site-content";
@@ -26,6 +28,17 @@ export default async function LocalePage({ params }: PageProps) {
   const costPage = costPageContent[locale];
   const intentPages = intentPageContent[locale];
   const topicArticles = topicArticleSlugs.map((slug) => topicArticleContent[locale][slug]);
+  const primaryNavItems: HeaderNavItem[] = [
+    { href: "#overview", label: copy.nav.overview },
+    { href: "#investment", label: copy.nav.investment },
+    { href: "#costs", label: copy.nav.costs },
+    { href: "#comparison", label: copy.nav.comparison },
+    { href: "#glossary", label: copy.nav.glossary },
+    { href: "#process", label: copy.nav.process },
+    { href: "#faq", label: copy.nav.faq },
+    { href: "#contact", label: copy.nav.contact },
+  ];
+  const localeHrefMap = Object.fromEntries(locales.map((entry) => [entry, `/${entry}`])) as Record<(typeof locales)[number], string>;
   const organizationStructuredData = buildOrganizationSchema();
   const webPageStructuredData = buildWebPageSchema(`/${locale}`, copy.seo.title, copy.seo.description);
   const costItemListStructuredData = {
@@ -121,28 +134,7 @@ export default async function LocalePage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
       <section className="hero-section">
-        <header className="site-header">
-          <Link className="brand" href={`/${locale}`}>
-            EB5 Info
-          </Link>
-          <nav className="top-nav" aria-label="Primary">
-            <a href="#overview">{copy.nav.overview}</a>
-            <a href="#investment">{copy.nav.investment}</a>
-            <a href="#costs">{copy.nav.costs}</a>
-            <a href="#comparison">{copy.nav.comparison}</a>
-            <a href="#glossary">{copy.nav.glossary}</a>
-            <a href="#process">{copy.nav.process}</a>
-            <a href="#faq">{copy.nav.faq}</a>
-            <a href="#contact">{copy.nav.contact}</a>
-          </nav>
-          <div className="locale-switcher" aria-label="Language selector">
-            {locales.map((entry) => (
-              <Link key={entry} href={`/${entry}`} aria-current={entry === locale ? "page" : undefined}>
-                {localeLabels[entry]}
-              </Link>
-            ))}
-          </div>
-        </header>
+        <SiteHeader locale={locale} navItems={primaryNavItems} localeHrefMap={localeHrefMap} />
 
         <div className="hero-grid">
           <div className="hero-copy">

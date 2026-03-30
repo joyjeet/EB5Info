@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SiteHeader } from "@/components/site-header";
 import { costPageContent } from "@/lib/cost-page-content";
+import { buildStandaloneHeaderNav } from "@/lib/header-copy";
 import { intentPageContent } from "@/lib/intent-page-content";
 import { isLocale, locales, withBaseUrl } from "@/lib/i18n";
 import { buildOrganizationSchema, buildWebPageSchema } from "@/lib/schema";
@@ -51,6 +53,10 @@ export default async function TopicArticlePage({ params }: PageProps) {
   const page = topicArticleContent[locale][topicSlug];
   const costPage = costPageContent[locale];
   const investmentPage = intentPageContent[locale].investmentAmount;
+  const standaloneNavItems = buildStandaloneHeaderNav(locale, "articles");
+  const localeHrefMap = Object.fromEntries(
+    locales.map((entry) => [entry, `/${entry}/${topicSlug}`]),
+  ) as Record<(typeof locales)[number], string>;
   const relatedTopicArticles = topicArticleSlugs
     .filter((slug) => slug !== topicSlug)
     .map((slug) => topicArticleContent[locale][slug]);
@@ -107,6 +113,9 @@ export default async function TopicArticlePage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
+      <section className="hero-section">
+        <SiteHeader locale={locale} navItems={standaloneNavItems} localeHrefMap={localeHrefMap} />
+      </section>
 
       <section className="content-section standalone-hero">
         <nav className="breadcrumbs" aria-label="Breadcrumb">

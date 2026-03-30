@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SiteHeader } from "@/components/site-header";
 import { costPageContent } from "@/lib/cost-page-content";
+import { buildStandaloneHeaderNav } from "@/lib/header-copy";
 import { intentPageContent } from "@/lib/intent-page-content";
-import { isLocale, withBaseUrl } from "@/lib/i18n";
+import { isLocale, locales, withBaseUrl } from "@/lib/i18n";
 import { buildOrganizationSchema, buildWebPageSchema } from "@/lib/schema";
 
 type IntentPageProps = {
@@ -46,6 +48,10 @@ export default async function MoneyBackPage({ params }: IntentPageProps) {
   const page = intentPageContent[locale].moneyBack;
   const costPage = costPageContent[locale];
   const investmentPage = intentPageContent[locale].investmentAmount;
+  const standaloneNavItems = buildStandaloneHeaderNav(locale, "capitalReturn");
+  const localeHrefMap = Object.fromEntries(
+    locales.map((entry) => [entry, `/${entry}/can-i-get-eb-5-money-back`]),
+  ) as Record<(typeof locales)[number], string>;
   const organizationStructuredData = buildOrganizationSchema();
   const webPageStructuredData = buildWebPageSchema(
     `/${locale}/can-i-get-eb-5-money-back`,
@@ -89,6 +95,9 @@ export default async function MoneyBackPage({ params }: IntentPageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
+      <section className="hero-section">
+        <SiteHeader locale={locale} navItems={standaloneNavItems} localeHrefMap={localeHrefMap} />
+      </section>
       <section className="content-section standalone-hero">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link href={`/${locale}`}>EB5 Info</Link>

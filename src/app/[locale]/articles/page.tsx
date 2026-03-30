@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SiteHeader } from "@/components/site-header";
 import { costPageContent } from "@/lib/cost-page-content";
+import { buildStandaloneHeaderNav } from "@/lib/header-copy";
 import { intentPageContent } from "@/lib/intent-page-content";
-import { isLocale, withBaseUrl } from "@/lib/i18n";
+import { isLocale, locales, withBaseUrl } from "@/lib/i18n";
 import { buildOrganizationSchema, buildWebPageSchema } from "@/lib/schema";
 import { siteContent } from "@/lib/site-content";
 import { topicArticleContent, topicArticleSlugs } from "@/lib/topic-article-content";
@@ -49,6 +51,10 @@ export default async function ArticlesIndexPage({ params }: PageProps) {
   const investmentPage = intentPageContent[locale].investmentAmount;
   const moneyBackPage = intentPageContent[locale].moneyBack;
   const costPage = costPageContent[locale];
+  const standaloneNavItems = buildStandaloneHeaderNav(locale, "articles");
+  const localeHrefMap = Object.fromEntries(
+    locales.map((entry) => [entry, `/${entry}/articles`]),
+  ) as Record<(typeof locales)[number], string>;
   const organizationStructuredData = buildOrganizationSchema();
   const webPageStructuredData = buildWebPageSchema(`/${locale}/articles`, `${copy.articleIndex.title} | EB5 Info`, copy.articleIndex.intro);
   const itemListStructuredData = {
@@ -92,6 +98,9 @@ export default async function ArticlesIndexPage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListStructuredData) }} />
+      <section className="hero-section">
+        <SiteHeader locale={locale} navItems={standaloneNavItems} localeHrefMap={localeHrefMap} />
+      </section>
 
       <section className="content-section standalone-hero">
         <nav className="breadcrumbs" aria-label="Breadcrumb">

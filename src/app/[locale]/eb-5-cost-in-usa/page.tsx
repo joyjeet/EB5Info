@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { SiteHeader } from "@/components/site-header";
 import { costPageContent } from "@/lib/cost-page-content";
+import { buildStandaloneHeaderNav } from "@/lib/header-copy";
 import { intentPageContent } from "@/lib/intent-page-content";
-import { isLocale, withBaseUrl } from "@/lib/i18n";
+import { isLocale, locales, withBaseUrl } from "@/lib/i18n";
 import { buildOrganizationSchema, buildWebPageSchema } from "@/lib/schema";
 import { siteContent } from "@/lib/site-content";
 
@@ -47,6 +49,10 @@ export default async function CostGuidePage({ params }: CostPageProps) {
   const copy = siteContent[locale];
   const page = costPageContent[locale];
   const intentPages = intentPageContent[locale];
+  const standaloneNavItems = buildStandaloneHeaderNav(locale, "costGuide");
+  const localeHrefMap = Object.fromEntries(
+    locales.map((entry) => [entry, `/${entry}/eb-5-cost-in-usa`]),
+  ) as Record<(typeof locales)[number], string>;
   const organizationStructuredData = buildOrganizationSchema();
   const webPageStructuredData = buildWebPageSchema(
     `/${locale}/eb-5-cost-in-usa`,
@@ -90,6 +96,9 @@ export default async function CostGuidePage({ params }: CostPageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
+      <section className="hero-section">
+        <SiteHeader locale={locale} navItems={standaloneNavItems} localeHrefMap={localeHrefMap} />
+      </section>
       <section className="content-section standalone-hero">
         <nav className="breadcrumbs" aria-label="Breadcrumb">
           <Link href={`/${locale}`}>EB5 Info</Link>
