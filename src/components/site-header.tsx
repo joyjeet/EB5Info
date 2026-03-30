@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useId, useRef } from "react";
 
 import { headerUiCopy, type HeaderNavItem } from "@/lib/header-copy";
 import { localeLabels, type Locale } from "@/lib/i18n";
@@ -14,26 +14,33 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({ locale, navItems, localeHrefMap, brandHref = `/${locale}` }: SiteHeaderProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();
+  const toggleId = useId();
+  const toggleRef = useRef<HTMLInputElement>(null);
   const copy = headerUiCopy[locale];
+  const closeMenu = () => {
+    if (toggleRef.current) {
+      toggleRef.current.checked = false;
+    }
+  };
 
   return (
-    <header className="site-header" data-open={isOpen ? "true" : "false"}>
-      <Link className="brand" href={brandHref} onClick={() => setIsOpen(false)}>
+    <header className="site-header">
+      <Link className="brand" href={brandHref} onClick={closeMenu}>
         EB5 Info
       </Link>
-      <button
-        type="button"
-        className="menu-toggle"
+      <input
+        ref={toggleRef}
+        className="menu-toggle-input"
+        id={toggleId}
+        type="checkbox"
         aria-controls={panelId}
-        aria-label={isOpen ? copy.close : copy.menu}
-        data-state={isOpen ? "open" : "closed"}
-        onClick={() => setIsOpen((open) => !open)}
-      >
-        {isOpen ? copy.close : copy.menu}
-      </button>
-      <div className={`site-header-panel${isOpen ? " is-open" : ""}`} id={panelId}>
+        aria-label={copy.menu}
+      />
+      <label className="menu-toggle" htmlFor={toggleId}>
+        {copy.menu}
+      </label>
+      <div className="site-header-panel" id={panelId}>
         <div className="site-header-panel-inner">
           <nav className="top-nav" aria-label={copy.primaryNav}>
             {navItems.map((item) => {
@@ -43,7 +50,7 @@ export function SiteHeader({ locale, navItems, localeHrefMap, brandHref = `/${lo
                     key={item.href}
                     href={item.href}
                     aria-current={item.isCurrent ? "page" : undefined}
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMenu}
                   >
                     {item.label}
                   </a>
@@ -55,7 +62,7 @@ export function SiteHeader({ locale, navItems, localeHrefMap, brandHref = `/${lo
                   key={item.href}
                   href={item.href}
                   aria-current={item.isCurrent ? "page" : undefined}
-                  onClick={() => setIsOpen(false)}
+                  onClick={closeMenu}
                 >
                   {item.label}
                 </Link>
@@ -64,7 +71,7 @@ export function SiteHeader({ locale, navItems, localeHrefMap, brandHref = `/${lo
           </nav>
           <div className="locale-switcher" aria-label={copy.languageSelector}>
             {Object.entries(localeHrefMap).map(([entry, href]) => (
-              <Link key={entry} href={href} aria-current={entry === locale ? "page" : undefined} onClick={() => setIsOpen(false)}>
+              <Link key={entry} href={href} aria-current={entry === locale ? "page" : undefined} onClick={closeMenu}>
                 {localeLabels[entry as Locale]}
               </Link>
             ))}

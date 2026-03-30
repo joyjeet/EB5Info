@@ -107,6 +107,12 @@ textarea {
   cursor: pointer;
 }
 
+.menu-toggle-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .top-nav,
 .locale-switcher,
 .hero-actions,
@@ -762,7 +768,7 @@ textarea {
     gap: 0.85rem;
   }
 
-  .site-header-panel.is-open {
+  .menu-toggle-input:checked + .menu-toggle + .site-header-panel {
     max-height: 22rem;
     padding-top: 0.9rem;
     border-top-color: var(--border);
@@ -775,6 +781,12 @@ textarea {
       border-color 260ms ease,
       opacity 220ms ease,
       transform 260ms ease;
+  }
+
+  .menu-toggle-input:checked + .menu-toggle {
+    background: rgba(15, 90, 82, 0.12);
+    border-color: rgba(15, 90, 82, 0.2);
+    color: var(--accent-strong);
   }
 
   .hero-copy,
